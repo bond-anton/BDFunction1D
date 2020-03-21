@@ -29,8 +29,13 @@ with open(readme_file, encoding='utf-8') as f:
 extensions = [
     Extension(
         'BDFunction1D',
-        ['BDFunction1D/__init__.pyx'],
+        ['BDFunction1D/__init__.pxd'],
         depends=['BDFunction1D/__init__.pxd'],
+    ),
+    Extension(
+        'BDFunction1D.Function',
+        ['BDFunction1D/Function.pyx'],
+        depends=['BDFunction1D/Function.pxd'],
     ),
     Extension(
         'BDFunction1D._helpers',
@@ -111,14 +116,14 @@ setup(
         'Programming Language :: Python :: 3.7',
     ],
 
-    keywords='FiniteDifference PDE Poisson',
+    keywords='1D R->R functions',
 
     packages=find_packages(exclude=['demo', 'tests', 'docs', 'contrib', 'venv']),
     ext_modules=cythonize(extensions, compiler_directives={'language_level': sys.version_info[0]}),
-    package_data={'BDFunction1D': ['__init__.pxd', '_helpers.pxd']},
+    package_data={'BDFunction1D': ['*.pxd']},
     setup_requires=['Cython', 'BDMesh>=0.2.11'],
     install_requires=['BDMesh>=0.2.11'],
     test_suite='nose.collector',
     cmdclass={'build_ext': CustomBuildExt},
-    tests_require=['nose']
+    tests_require=['nose', 'numpy', 'scipy']
 )
