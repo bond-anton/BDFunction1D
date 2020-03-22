@@ -33,14 +33,14 @@ extensions = [
         depends=['BDFunction1D/__init__.pxd'],
     ),
     Extension(
-        'BDFunction1D.Function',
-        ['BDFunction1D/Function.pyx'],
-        depends=['BDFunction1D/Function.pxd'],
-    ),
-    Extension(
         'BDFunction1D._helpers',
         ['BDFunction1D/_helpers.pyx'],
         depends=['BDFunction1D/_helpers.pxd'],
+    ),
+    Extension(
+        'BDFunction1D.Function',
+        ['BDFunction1D/Function.pyx'],
+        depends=['BDFunction1D/Function.pxd'],
     ),
 ]
 
