@@ -45,6 +45,10 @@ cdef class ZeroFunction(ConstantFunction):
     def __init__(self):
         super(ZeroFunction, self).__init__(0.0)
 
+    @property
+    def c(self):
+        return self.__c
+
     @c.setter
     def c(self, double c):
         self.__c = 0.0
