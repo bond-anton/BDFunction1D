@@ -8,7 +8,7 @@ python:
 # command to run tests
 script:
 - python setup.py build_ext --inplace &&
-  nosetests -v --with-coverage --cover-package=BDPoisson1D
+  nosetests -v --with-coverage --cover-package=BDFunction1D
 # codecov support
 before_install:
 - pip install codecov
