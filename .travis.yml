@@ -11,6 +11,6 @@ script:
   nosetests -v --with-coverage --cover-package=BDFunction1D
 # codecov support
 before_install:
-- pip install codecov
+- pip install codecov scipy
 after_success:
   codecov
