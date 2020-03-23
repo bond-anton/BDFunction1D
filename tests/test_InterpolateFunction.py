@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.interpolate import interp1d
 
-from BDFunction1D import InterpolateFunction
+from BDFunction1D.Interpolation import InterpolateFunction
 
 import unittest
 

@@ -1,6 +1,8 @@
 import numpy as np
 
-from BDFunction1D import Function, InterpolateFunction, NumericGradient
+from BDFunction1D import Function
+from BDFunction1D.Interpolation import InterpolateFunction
+from BDFunction1D.Functional import NumericGradient
 
 import unittest
 

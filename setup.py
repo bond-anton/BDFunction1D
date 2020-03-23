@@ -42,6 +42,26 @@ extensions = [
         ['BDFunction1D/Function.pyx'],
         depends=['BDFunction1D/Function.pxd'],
     ),
+    Extension(
+        'BDFunction1D.Standard',
+        ['BDFunction1D/Standard.pyx'],
+        depends=['BDFunction1D/Standard.pxd'],
+    ),
+    Extension(
+        'BDFunction1D.Interpolation',
+        ['BDFunction1D/Interpolation.pyx'],
+        depends=['BDFunction1D/Interpolation.pxd'],
+    ),
+    Extension(
+        'BDFunction1D.Functional',
+        ['BDFunction1D/Functional.pyx'],
+        depends=['BDFunction1D/Functional.pxd'],
+    ),
+    Extension(
+        'BDFunction1D.BinaryFunctional',
+        ['BDFunction1D/BinaryFunctional.pyx'],
+        depends=['BDFunction1D/BinaryFunctional.pxd'],
+    ),
 ]
 
 copt = {'msvc': ['/openmp', '/Ox', '/fp:fast', '/favor:INTEL64', '/Og'],
