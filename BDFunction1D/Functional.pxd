@@ -4,7 +4,6 @@ from BDFunction1D.Function cimport Function
 cdef class Functional(Function):
     cdef:
         Function __f
-        Function __result
 
 
 cdef class PowFunction(Functional):

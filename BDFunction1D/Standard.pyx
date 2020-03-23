@@ -58,13 +58,33 @@ cdef class Line(Constant):
     def k(self, double k):
         self.__k = k
 
+    @property
+    def x_intercept(self):
+        return -self.__c / self.__k
+
+    @x_intercept.setter
+    def x_intercept(self, double x_intercept):
+        self.__k = -self.__c / x_intercept
+
+    @property
+    def y_intercept(self):
+        return self.__c
+
+    @y_intercept.setter
+    def y_intercept(self, double y_intercept):
+        self.__c = y_intercept
+
+    cpdef through_points(self, double x1, double y1, double x2, double y2):
+        self.__k = (y2 - y1) / (x2 - x1)
+        self.__c = y1 - self.__k * x1
+
     cpdef double evaluate_point(self, double x):
         return self.__k * x + self.__c
 
 
 cdef class LineThroughPoints(Line):
 
-    def __init__(self, double x1, double y1, double x2, y2):
+    def __init__(self, double x1, double y1, double x2, double y2):
         cdef:
             double k, c
         k = (y2 - y1) / (x2 - x1)

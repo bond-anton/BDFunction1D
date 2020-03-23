@@ -14,10 +14,8 @@ cdef class Functional(Function):
         super(Functional, self).__init__()
         self.__f = f
 
-    @boundscheck(False)
-    @wraparound(False)
-    cpdef double[:] evaluate(self, double[:] x):
-        return self.__f.evaluate(x)
+    cpdef double evaluate_point(self, double x):
+        return self.__f.evaluate_point(x)
 
     @property
     def f(self):
@@ -42,51 +40,52 @@ cdef class ScaledFunction(Functional):
     def scale(self, double scale):
         self.__scale = scale
 
-    @boundscheck(False)
-    @wraparound(False)
-    cpdef double[:] evaluate(self, double[:] x):
-        cdef:
-            int i, n = x.shape[0]
-            double[:] f_y = self.__f.evaluate(x)
-            array[double] y = clone(array('d'), n, zero=False)
-        for i in range(n):
-            y[i] = self.__scale * f_y[i]
-        return y
+    cpdef double evaluate_point(self, double x):
+        return self.__scale * self.__f.evaluate_point(x)
 
 
 cdef class PowFunction(Functional):
 
-    def __init__(self, Function f, double exp):
+    def __init__(self, Function f, double exponent):
         super(PowFunction, self).__init__(f)
-        self.__exp = exp
+        self.__exp = exponent
 
     @property
-    def exp(self):
+    def exponent(self):
         return self.__exp
 
-    @exp.setter
-    def exp(self, double exp):
-        self.__exp = exp
+    @exponent.setter
+    def exponent(self, double exponent):
+        self.__exp = exponent
 
-    @boundscheck(False)
-    @wraparound(False)
-    cpdef double[:] evaluate(self, double[:] x):
-        cdef:
-            int i, n = x.shape[0]
-            double[:] f_y = self.__f.evaluate(x)
-            array[double] y = clone(array('d'), n, zero=False)
-        for i in range(n):
-            y[i] = pow(f_y[i], self.__exp)
-        return y
+    cpdef double evaluate_point(self, double x):
+        return pow(self.__f.evaluate_point(x), self.__exp)
 
 
 cdef class NumericGradient(Functional):
 
     @boundscheck(False)
     @wraparound(False)
+    cpdef double evaluate_point(self, double x):
+        cdef:
+            double h
+            int j = 1
+            double[:] dy
+        if not isinstance(self.__f, InterpolateFunction):
+            h = x * 1e-3
+            return (self.__f.evaluate_point(x + h) - self.__f.evaluate_point(x - h)) / (2 * h)
+        else:
+            dy = gradient1d(self.__f.y, self.__f.x)
+            while x > self.__f.x[j] and j < self.__f.n - 1:
+                j += 1
+            return dy[j-1] + (x - self.__f.x[j-1]) * (dy[j] - dy[j-1]) / (self.__f.x[j] - self.__f.x[j-1])
+
+    @boundscheck(False)
+    @wraparound(False)
     cpdef double[:] evaluate(self, double[:] x):
         cdef:
             int i, j = 1, n = x.shape[0]
+            double last_x = x[0]
             array[double] y
             double[:] dy
         if not isinstance(self.__f, InterpolateFunction):
@@ -95,7 +94,10 @@ cdef class NumericGradient(Functional):
             y = clone(array('d'), n, zero=False)
             dy = gradient1d(self.__f.y, self.__f.x)
             for i in range(n):
+                if x[i] < last_x:
+                    j = 1
                 while x[i] > self.__f.x[j] and j < self.__f.n - 1:
                     j += 1
                 y[i] = dy[j-1] + (x[i] - self.__f.x[j-1]) * (dy[j] - dy[j-1]) / (self.__f.x[j] - self.__f.x[j-1])
+                last_x = x[i]
             return y

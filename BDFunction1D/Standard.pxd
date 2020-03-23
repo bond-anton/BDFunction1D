@@ -14,6 +14,8 @@ cdef class Line(Constant):
     cdef:
         double __k
 
+    cpdef through_points(self, double x1, double y1, double x2, double y2)
+
 
 cdef class LineThroughPoints(Line):
     pass
