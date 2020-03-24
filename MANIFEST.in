@@ -9,8 +9,8 @@ include NOTICE.txt
 include README.md
 
 # Include Cython sources
-recursive-include BDPoisson1D *.pyx
-recursive-include BDPoisson1D *.pxd
+recursive-include BDFunction1D *.pyx
+recursive-include BDFunction1D *.pxd
 
 recursive-exclude build *
 recursive-exclude dist *

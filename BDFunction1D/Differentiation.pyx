@@ -1,7 +1,7 @@
 from cython cimport boundscheck, wraparound
 from cpython.array cimport array, clone
-from BDFunction1D._helpers cimport gradient1d
 
+from BDFunction1D._helpers cimport gradient1d
 from BDFunction1D.Function cimport Function
 from BDFunction1D.Functional cimport Functional
 from BDFunction1D.Interpolation cimport InterpolateFunction
