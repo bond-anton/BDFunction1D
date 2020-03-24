@@ -6,15 +6,19 @@ cdef class Functional(Function):
         Function __f
 
 
+cdef class NegateFunction(Functional):
+    pass
+
+
+cdef class AbsFunction(Functional):
+    pass
+
+
 cdef class PowFunction(Functional):
     cdef:
-        double __pow
+        double __exp
 
 
 cdef class ScaledFunction(Functional):
     cdef:
         double __scale
-
-
-cdef class NumericGradient(Functional):
-    pass

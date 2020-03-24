@@ -58,6 +58,11 @@ extensions = [
         depends=['BDFunction1D/Functional.pxd'],
     ),
     Extension(
+        'BDFunction1D.Differentiation',
+        ['BDFunction1D/Differentiation.pyx'],
+        depends=['BDFunction1D/Differentiation.pxd'],
+    ),
+    Extension(
         'BDFunction1D.BinaryFunctional',
         ['BDFunction1D/BinaryFunctional.pyx'],
         depends=['BDFunction1D/BinaryFunctional.pxd'],

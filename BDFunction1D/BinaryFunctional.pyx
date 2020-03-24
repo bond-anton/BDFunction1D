@@ -1,5 +1,4 @@
-from cython cimport boundscheck, wraparound
-from cpython.array cimport array, clone
+from libc.math cimport pow
 
 from BDFunction1D.Function cimport Function
 from BDFunction1D.Functional cimport Functional
@@ -22,59 +21,29 @@ cdef class BinaryFunctional(Functional):
 
 cdef class FunctionSum(BinaryFunctional):
 
-    @boundscheck(False)
-    @wraparound(False)
-    cpdef double[:] evaluate(self, double[:] x):
-        cdef:
-            int i, n = x.shape[0]
-            double[:] f_y = self.__f.evaluate(x)
-            double[:] p_y = self.__p.evaluate(x)
-            array[double] y = clone(array('d'), n, zero=False)
-        for i in range(n):
-            y[i] = f_y[i] + p_y[i]
-        return y
+    cpdef double evaluate_point(self, double x):
+        return self.__f.evaluate_point(x) + self.__p.evaluate_point(x)
 
 
 cdef class FunctionDifference(BinaryFunctional):
 
-    @boundscheck(False)
-    @wraparound(False)
-    cpdef double[:] evaluate(self, double[:] x):
-        cdef:
-            int i, n = x.shape[0]
-            double[:] f_y = self.__f.evaluate(x)
-            double[:] p_y = self.__p.evaluate(x)
-            array[double] y = clone(array('d'), n, zero=False)
-        for i in range(n):
-            y[i] = f_y[i] - p_y[i]
-        return y
+    cpdef double evaluate_point(self, double x):
+        return self.__f.evaluate_point(x) - self.__p.evaluate_point(x)
 
 
 cdef class FunctionMultiplication(BinaryFunctional):
 
-    @boundscheck(False)
-    @wraparound(False)
-    cpdef double[:] evaluate(self, double[:] x):
-        cdef:
-            int i, n = x.shape[0]
-            double[:] f_y = self.__f.evaluate(x)
-            double[:] p_y = self.__p.evaluate(x)
-            array[double] y = clone(array('d'), n, zero=False)
-        for i in range(n):
-            y[i] = f_y[i] * p_y[i]
-        return y
+    cpdef double evaluate_point(self, double x):
+        return self.__f.evaluate_point(x) * self.__p.evaluate_point(x)
 
 
 cdef class FunctionDivision(BinaryFunctional):
 
-    @boundscheck(False)
-    @wraparound(False)
-    cpdef double[:] evaluate(self, double[:] x):
-        cdef:
-            int i, n = x.shape[0]
-            double[:] f_y = self.__f.evaluate(x)
-            double[:] p_y = self.__p.evaluate(x)
-            array[double] y = clone(array('d'), n, zero=False)
-        for i in range(n):
-            y[i] = f_y[i] / p_y[i]
-        return y
+    cpdef double evaluate_point(self, double x):
+        return self.__f.evaluate_point(x) / self.__p.evaluate_point(x)
+
+
+cdef class FunctionPower(BinaryFunctional):
+
+    cpdef double evaluate_point(self, double x):
+        return pow(self.__f.evaluate_point(x), self.__p.evaluate_point(x))

@@ -21,3 +21,7 @@ cdef class FunctionMultiplication(BinaryFunctional):
 
 cdef class FunctionDivision(BinaryFunctional):
     pass
+
+
+cdef class FunctionPower(BinaryFunctional):
+    pass
