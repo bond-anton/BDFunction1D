@@ -90,11 +90,11 @@ cdef class InterpolateFunctionMesh(InterpolateFunction):
     def __init__(self, mesh):
         if isinstance(mesh, TreeMesh1D):
             flat_mesh = mesh.flatten()
-            x = flat_mesh.physical_nodes()
+            x = flat_mesh.physical_nodes
             y = flat_mesh.solution
             err = flat_mesh.residual
         elif isinstance(mesh, Mesh1D):
-            x = mesh.physical_nodes()
+            x = mesh.physical_nodes
             y = mesh.solution
             err = mesh.residual
         super(InterpolateFunctionMesh, self).__init__(x, y, err)
