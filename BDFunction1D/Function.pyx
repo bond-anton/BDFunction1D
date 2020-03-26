@@ -25,6 +25,19 @@ cdef class Function(object):
             y[i] = self.evaluate_point(x[i])
         return y
 
+    cpdef double error_point(self, double x):
+        return 0.0
+
+    @boundscheck(False)
+    @wraparound(False)
+    cpdef double[:] error(self, double[:] x):
+        cdef:
+            int i, n = x.shape[0]
+            array[double] y = clone(array('d'), n, zero=False)
+        for i in range(n):
+            y[i] = self.error_point(x[i])
+        return y
+
     def __neg__(self):
         return NegateFunction(self)
 

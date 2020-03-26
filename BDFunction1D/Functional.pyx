@@ -1,4 +1,4 @@
-from libc.math cimport pow, fabs
+from libc.math cimport pow, fabs, HUGE_VAL
 
 from BDFunction1D.Function cimport Function
 
@@ -11,6 +11,9 @@ cdef class Functional(Function):
 
     cpdef double evaluate_point(self, double x):
         return self.__f.evaluate_point(x)
+
+    cpdef double error_point(self, double x):
+        return self.__f.error_point(x)
 
     @property
     def f(self):
@@ -50,6 +53,9 @@ cdef class ScaledFunction(Functional):
     cpdef double evaluate_point(self, double x):
         return self.__scale * self.__f.evaluate_point(x)
 
+    cpdef double error_point(self, double x):
+        return fabs(self.__scale) * self.__f.error_point(x)
+
 
 cdef class PowFunction(Functional):
 
@@ -67,3 +73,9 @@ cdef class PowFunction(Functional):
 
     cpdef double evaluate_point(self, double x):
         return pow(self.__f.evaluate_point(x), self.__exp)
+
+    cpdef double error_point(self, double x):
+        if self.__exp < 1.0 and self.__f.evaluate_point(x) == 0:
+            return HUGE_VAL
+        else:
+            return fabs(self.__exp) * fabs(pow(self.__f.evaluate_point(x), self.__exp - 1)) * self.__f.error_point(x)

@@ -1,7 +1,8 @@
+from libc.math cimport sqrt, fabs
 from cython cimport boundscheck, wraparound
 from cpython.array cimport array, clone
 
-from BDFunction1D._helpers cimport gradient1d
+from BDFunction1D._helpers cimport gradient1d, gradient1d_error
 from BDFunction1D.Function cimport Function
 from BDFunction1D.Functional cimport Functional
 from BDFunction1D.Interpolation cimport InterpolateFunction
@@ -57,3 +58,38 @@ cdef class NumericGradient(Functional):
                 y[i] = dy[j-1] + (x[i] - self.__f.x[j-1]) * (dy[j] - dy[j-1]) / (self.__f.x[j] - self.__f.x[j-1])
                 last_x = x[i]
         return y
+
+    @boundscheck(False)
+    @wraparound(False)
+    cpdef double error_point(self, double x):
+        cdef:
+            int j = 1
+            double[:] dy_err
+        if not isinstance(self.__f, InterpolateFunction):
+            return sqrt(2) * self.__f.error_point(x) / fabs(2 * self.__dx)
+        else:
+            dy_err = gradient1d_error(self.__f.err, self.__f.x)
+            while x > self.__f.x[j] and j < self.__f.n - 1:
+                j += 1
+            return sqrt(dy_err[j-1]**2 + (x - self.__f.x[j-1])**2 * (dy_err[j]**2 + dy_err[j-1]**2))\
+                   / fabs(self.__f.x[j] - self.__f.x[j-1])
+
+    @boundscheck(False)
+    @wraparound(False)
+    cpdef double[:] error(self, double[:] x):
+        cdef:
+            int i, j = 1, n = x.shape[0]
+            array[double] err
+            double[:] dy_err
+        err = clone(array('d'), n, zero=False)
+        if not isinstance(self.__f, InterpolateFunction):
+            for i in range(n):
+                err[i] = self.error_point(x[i])
+        else:
+            dy_err = gradient1d_error(self.__f.err, self.__f.x)
+            for i in range(n):
+                while x[i] > self.__f.x[j] and j < self.__f.n - 1:
+                    j += 1
+                err[i] = sqrt(dy_err[j-1]**2 + (x[i] - self.__f.x[j-1])**2 * (dy_err[j]**2 + dy_err[j-1]**2))\
+                         / fabs(self.__f.x[j] - self.__f.x[j-1])
+        return err

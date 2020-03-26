@@ -15,8 +15,10 @@ class TestFunction(unittest.TestCase):
         f = Function()
         x = m.pi
         self.assertEqual(f.evaluate_point(x), 0.0)
+        self.assertEqual(f.error_point(x), 0.0)
         x = np.arange(100, dtype=np.float)
         np.testing.assert_allclose(f.evaluate(x), np.zeros_like(x))
+        np.testing.assert_allclose(f.error(x), np.zeros_like(x))
 
     def test_new_Function(self):
 
@@ -24,11 +26,16 @@ class TestFunction(unittest.TestCase):
             def evaluate_point(self, x):
                 return m.sqrt(x)
 
+            def error_point(self, x):
+                return 2.0
+
         f = TestF()
         x = np.arange(100, dtype=np.float)
         np.testing.assert_allclose(f.evaluate(x), np.sqrt(x))
+        np.testing.assert_allclose(f.error(x), np.ones_like(x) * 2)
         x = m.pi
         self.assertEqual(f.evaluate_point(x), m.sqrt(x))
+        self.assertEqual(f.error_point(x), 2.0)
 
     def test_neg(self):
 
