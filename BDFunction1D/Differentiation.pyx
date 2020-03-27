@@ -64,6 +64,7 @@ cdef class NumericGradient(Functional):
     cpdef double error_point(self, double x):
         cdef:
             int j = 1
+            double dx2
             double[:] dy_err
         if not isinstance(self.__f, InterpolateFunction):
             return sqrt(2) * self.__f.error_point(x) / fabs(2 * self.__dx)
@@ -71,14 +72,18 @@ cdef class NumericGradient(Functional):
             dy_err = gradient1d_error(self.__f.err, self.__f.x)
             while x > self.__f.x[j] and j < self.__f.n - 1:
                 j += 1
-            return sqrt(dy_err[j-1]**2 + (x - self.__f.x[j-1])**2 * (dy_err[j]**2 + dy_err[j-1]**2))\
-                   / fabs(self.__f.x[j] - self.__f.x[j-1])
+            dx2 = (self.__f.x[j] - self.__f.x[j-1])**2
+            return sqrt(
+                dy_err[j-1]**2 * (x - self.__f.x[j])**2 / dx2
+                + dy_err[j]**2 * (x - self.__f.x[j-1])**2 / dx2)
+
 
     @boundscheck(False)
     @wraparound(False)
     cpdef double[:] error(self, double[:] x):
         cdef:
             int i, j = 1, n = x.shape[0]
+            double dx2
             array[double] err
             double[:] dy_err
         err = clone(array('d'), n, zero=False)
@@ -90,6 +95,8 @@ cdef class NumericGradient(Functional):
             for i in range(n):
                 while x[i] > self.__f.x[j] and j < self.__f.n - 1:
                     j += 1
-                err[i] = sqrt(dy_err[j-1]**2 + (x[i] - self.__f.x[j-1])**2 * (dy_err[j]**2 + dy_err[j-1]**2))\
-                         / fabs(self.__f.x[j] - self.__f.x[j-1])
+                dx2 = (self.__f.x[j] - self.__f.x[j-1])**2
+                err[i] = sqrt(
+                    dy_err[j-1]**2 * (x[i] - self.__f.x[j])**2 / dx2
+                    + dy_err[j]**2 * (x[i] - self.__f.x[j-1])**2 / dx2)
         return err

@@ -1,10 +1,6 @@
-import numpy as np
-
-from libc.math cimport fabs, ceil, round, sqrt
+from libc.math cimport fabs, sqrt
 from cython cimport boundscheck, wraparound
 from cpython.array cimport array, clone
-
-from BDMesh.Mesh1DUniform cimport Mesh1DUniform
 
 
 @boundscheck(False)

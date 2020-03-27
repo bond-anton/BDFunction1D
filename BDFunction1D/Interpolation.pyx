@@ -64,24 +64,28 @@ cdef class InterpolateFunction(Function):
     cpdef double error_point(self, double x):
         cdef:
             int j = 1
+            double dx2
         while x > self.__x[j] and j < self.__n - 1:
             j += 1
-        return sqrt(self.__err[j-1]**2 + (x - self.__x[j-1])**2
-                    * (self.__err[j]**2 + self.__err[j-1]**2))\
-               / fabs(self.__x[j] - self.__x[j-1])
+        dx2 = (self.__x[j] - self.__x[j-1])**2
+        return sqrt(
+            self.__err[j-1]**2 * (x - self.__x[j])**2 / dx2
+             + self.__err[j]**2 * (x - self.__x[j-1])**2 / dx2)
 
     @boundscheck(False)
     @wraparound(False)
     cpdef double[:] error(self, double[:] x):
         cdef:
             int i, j = 1, n = x.shape[0]
+            double dx2
             array[double] err = clone(array('d'), n, zero=False)
         for i in range(n):
             while x[i] > self.__x[j] and j < self.__n - 1:
                 j += 1
-            err[i] = sqrt(self.__err[j-1]**2 + (x[i] - self.__x[j-1])**2
-                          * (self.__err[j]**2 + self.__err[j-1]**2))\
-                     / fabs(self.__x[j] - self.__x[j-1])
+            dx2 = (self.__x[j] - self.__x[j-1])**2
+            err[i] = sqrt(
+                self.__err[j-1]**2 * (x[i] - self.__x[j])**2 / dx2
+                + self.__err[j]**2 * (x[i] - self.__x[j-1])**2 / dx2)
         return err
 
 
