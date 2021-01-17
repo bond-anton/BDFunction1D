@@ -4,10 +4,8 @@
 name: Publish macOS wheels to PyPI
 
 on:
-  push:
-    branches: [ master ]
-#  release:
-#    types: [created]
+  release:
+    types: [created]
 
 jobs:
   deploy:
@@ -15,8 +13,7 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-#        python-version: [3.7, 3.8, 3.9]
-        python-version: [3.8]
+        python-version: [3.7, 3.8, 3.9]
 
     steps:
     - uses: actions/checkout@v2

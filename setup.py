@@ -27,11 +27,6 @@ with open(readme_file, encoding='utf-8') as f:
     long_description = f.read()
 
 extensions = [
-    # Extension(
-    #     'BDFunction1D',
-    #     ['BDFunction1D/__init__.pxd'],
-    #     depends=['BDFunction1D/__init__.pxd'],
-    # ),
     Extension(
         'BDFunction1D._helpers',
         ['BDFunction1D/_helpers.pyx'],
