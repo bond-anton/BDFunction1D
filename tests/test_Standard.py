@@ -76,7 +76,6 @@ class TestStandard(unittest.TestCase):
         f.x_intercept = 2.0
         self.assertEqual(f.k, -1.5)
 
-
     def test_LineThroughPoints(self):
         x1 = 2.0
         y1 = 3.0
@@ -146,7 +145,7 @@ class TestStandard(unittest.TestCase):
         x = m.pi
         self.assertEqual(f.evaluate_point(x), m.log(x))
         self.assertAlmostEqual(f2.evaluate_point(f.evaluate_point(x)), x, places=14)
-        x = np.arange(100, dtype=np.float)
+        x = np.arange(100, dtype=np.float) + 1.0
         np.testing.assert_allclose(f.evaluate(x), np.log(x))
         np.testing.assert_allclose(f2.evaluate(f.evaluate(x)), x)
 

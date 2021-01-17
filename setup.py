@@ -146,9 +146,7 @@ setup(
     packages=find_packages(exclude=['demo', 'tests', 'docs', 'contrib', 'venv']),
     ext_modules=cythonize(extensions, compiler_directives={'language_level': sys.version_info[0]}),
     package_data={'BDFunction1D': ['*.pxd']},
-    setup_requires=['Cython', 'BDMesh>=0.2.11'],
     install_requires=['BDMesh>=0.2.11'],
-    test_suite='nose.collector',
     cmdclass={'build_ext': CustomBuildExt},
     tests_require=['nose', 'numpy', 'scipy']
 )
