@@ -1,5 +1,6 @@
 # BDFunction1D
 
+![Build](https://github.com/bond-anton/BDFunction1D/workflows/Build/badge.svg)
 [![codecov](https://codecov.io/gh/bond-anton/BDFunction1D/branch/master/graph/badge.svg)](https://codecov.io/gh/bond-anton/BDPoisson1D)
 
 One dimensional real argument real value functions.
