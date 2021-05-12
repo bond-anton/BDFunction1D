@@ -64,11 +64,11 @@ extensions = [
     ),
 ]
 
-c_opt = {'msvc': ['/openmp', '/Ox', '/fp:fast', '/favor:INTEL64', '/Og'],
-         'mingw32': ['-fopenmp', '-O3', '-ffast-math', '-march=native'],
-         'unix': ['-fopenmp', '-O3', '-ffast-math', '-march=native']}
-l_opt = {'mingw32': ['-fopenmp'],
-         'unix': ['-fopenmp']}
+c_opt = {'msvc': [],
+         'mingw32': [],
+         'unix': []}
+l_opt = {'mingw32': [],
+         'unix': []}
 
 
 # check whether compiler supports a flag
@@ -129,8 +129,6 @@ setup(
         'License :: OSI Approved :: Apache Software License',
         'Topic :: Scientific/Engineering :: Mathematics',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
@@ -144,5 +142,4 @@ setup(
     package_data={'BDFunction1D': ['*.pxd']},
     install_requires=['BDMesh>=0.2.11'],
     cmdclass={'build_ext': CustomBuildExt},
-    tests_require=['numpy', 'scipy']
 )
